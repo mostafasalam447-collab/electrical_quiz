@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electrical Engineering Quiz — Mostafa Sallam</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0a1628;--teal:#0e7490;--teal-light:#22d3ee;--red:#ef4444;--green:#10b981;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);min-height:100vh;overflow-x:hidden;padding-bottom:80px;}
+.bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:drift 12s ease-in-out infinite alternate;}
+.orb1{width:500px;height:500px;background:#0e7490;top:-100px;left:-100px;}
+.orb2{width:400px;height:400px;background:#0f766e;top:40%;right:-80px;animation-delay:3s;}
+.orb3{width:300px;height:300px;background:#1d4ed8;bottom:10%;left:20%;animation-delay:6s;}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,40px) scale(1.08)}}
+.sticky{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(10,22,40,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(14,116,144,.3);padding:10px 20px;}
+.sticky-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.pill{padding:5px 14px;border-radius:20px;font-size:.8em;font-weight:600;white-space:nowrap;}
+.pill-q{background:rgba(255,255,255,.1);color:#e2e8f0;border:1px solid rgba(255,255,255,.2);}
+.pill-c{background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid #10b981;}
+.pill-w{background:rgba(239,68,68,.2);color:#fca5a5;border:1px solid #ef4444;}
+.pill-p{background:rgba(245,158,11,.2);color:#fcd34d;border:1px solid #f59e0b;}
+.prog-wrap{flex:1;background:rgba(255,255,255,.1);border-radius:8px;height:6px;min-width:60px;overflow:hidden;}
+.prog-fill{background:linear-gradient(90deg,var(--teal),var(--teal-light));height:100%;border-radius:8px;transition:width .5s;}
+#startScreen{position:relative;z-index:1;max-width:700px;margin:60px auto 0;padding:20px;}
+.start-card{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border:1px solid rgba(14,116,144,.4);border-radius:24px;padding:44px 40px;box-shadow:0 40px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);}
+.cross-icon{font-size:3.5em;display:block;text-align:center;margin-bottom:14px;animation:pulse-icon 3s ease-in-out infinite;}
+@keyframes pulse-icon{0%,100%{transform:scale(1);filter:drop-shadow(0 0 15px rgba(34,211,238,.4))}50%{transform:scale(1.06);filter:drop-shadow(0 0 30px rgba(34,211,238,.8))}}
+.start-card h1{font-family:'Playfair Display',serif;font-size:2.2em;font-weight:900;color:#fff;text-align:center;margin-bottom:6px;}
+.subtitle{text-align:center;color:var(--teal-light);font-size:.95em;margin-bottom:4px;opacity:.85;}
+.by-line{text-align:center;color:#94a3b8;font-size:.9em;margin-bottom:26px;letter-spacing:.04em;}
+.by-line span{color:var(--teal-light);font-weight:700;}
+.section-label{color:#94a3b8;font-size:.8em;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.filter-group{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.filter-btn{padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.85em;font-weight:500;transition:all .2s;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#94a3b8;}
+.filter-btn:hover{border-color:var(--teal-light);color:var(--teal-light);background:rgba(34,211,238,.08);}
+.filter-btn.active{background:linear-gradient(135deg,rgba(14,116,144,.5),rgba(34,211,238,.2));border-color:var(--teal-light);color:var(--teal-light);box-shadow:0 0 14px rgba(34,211,238,.2);}
+.start-info{color:#64748b;font-size:.9em;text-align:center;margin-bottom:22px;}
+.start-info span{color:var(--teal-light);font-weight:700;}
+.btn-start{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--teal),#0891b2);color:#fff;font-size:1.1em;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .25s;box-shadow:0 8px 30px rgba(14,116,144,.5);}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(14,116,144,.6);}
+#quizWrapper{display:none;padding-top:75px;position:relative;z-index:1;}
+.sec-hdr{max-width:860px;margin:30px auto 4px;padding:0 18px;display:flex;align-items:center;gap:14px;}
+.sec-hdr .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(14,116,144,.5),transparent);}
+.sec-hdr .line.r{background:linear-gradient(270deg,rgba(14,116,144,.5),transparent);}
+.sec-hdr .lbl{color:var(--teal-light);font-size:.78em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;background:rgba(14,116,144,.2);border:1px solid rgba(14,116,144,.4);padding:4px 14px;border-radius:20px;}
+.q-card{max-width:860px;margin:16px auto;padding:26px 30px;background:rgba(255,255,255,.97);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.3);border-left:5px solid rgba(14,116,144,.3);transition:border-color .35s;animation:slideIn .3s ease both;}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.q-card.answered-correct{border-left-color:var(--green);}
+.q-card.answered-wrong{border-left-color:var(--red);}
+.q-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.q-num{background:linear-gradient(135deg,var(--teal),#0891b2);color:#fff;min-width:36px;height:36px;padding:0 8px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85em;flex-shrink:0;}
+.cat-tag{background:linear-gradient(135deg,#0e7490,#0891b2);color:#fff;padding:3px 12px;border-radius:20px;font-size:.72em;font-weight:600;}
+.q-text{font-size:1.05em;font-weight:600;color:#0f172a;line-height:1.6;margin-bottom:16px;}
+.ctx{background:#f0f9ff;border:1px dashed #0e7490;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.88em;color:#0f172a;line-height:1.6;}
+.ctx b.ct{display:block;color:#0e7490;margin-bottom:4px;}
+.ctx table{border-collapse:collapse;width:100%;margin:6px 0;}
+.ctx td,.ctx th{border:1px solid #94a3b8;padding:5px 10px;text-align:center;}
+.ctx th{background:#e0f2fe;}
+.ctx .eq{padding:3px 0;}
+.ctx svg{max-width:400px;width:100%;height:auto;display:block;}
+.opts{display:flex;flex-direction:column;gap:9px;}
+.opt{padding:12px 18px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;font-size:.95em;text-align:left;background:#fff;color:#334155;transition:all .18s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:10px;}
+.opt::before{content:attr(data-letter);width:28px;height:28px;border-radius:50%;background:#f1f5f9;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700;color:#64748b;flex-shrink:0;transition:all .18s;}
+.opt:hover:not(:disabled){border-color:var(--teal);background:#f0fdfa;transform:translateX(5px);}
+.opt:hover:not(:disabled)::before{background:var(--teal);border-color:var(--teal);color:#fff;}
+.opt.correct{border-color:var(--green);background:#f0fdf4;color:#065f46;font-weight:600;}
+.opt.correct::before{background:var(--green);border-color:var(--green);color:#fff;}
+.opt.wrong{border-color:var(--red);background:#fef2f2;color:#7f1d1d;}
+.opt.wrong::before{background:var(--red);border-color:var(--red);color:#fff;}
+.opt:disabled{cursor:default;}
+.q-feedback{margin-top:14px;padding:12px 16px;border-radius:12px;font-size:.88em;line-height:1.6;display:none;}
+.q-feedback.correct{background:#f0fdf4;border-left:4px solid var(--green);color:#065f46;}
+.q-feedback.wrong{background:#fef2f2;border-left:4px solid var(--red);color:#7f1d1d;}
+.submit-wrap{max-width:860px;margin:26px auto;text-align:center;padding:0 20px;}
+.btn-submit{padding:16px 70px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--teal),#0891b2);color:#fff;font-size:1.1em;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 8px 30px rgba(14,116,144,.5);}
+.btn-submit:hover{transform:translateY(-3px);}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+#resultsBox{max-width:860px;margin:24px auto;padding:40px;background:rgba(255,255,255,.97);border-radius:24px;text-align:center;display:none;box-shadow:0 30px 80px rgba(0,0,0,.4);}
+#resultsBox h2{font-family:'Playfair Display',serif;color:var(--navy);font-size:2em;margin-bottom:8px;}
+.score-ring{width:160px;height:160px;margin:20px auto;position:relative;}
+.score-ring svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:#e2e8f0;stroke-width:12;}
+.ring-fg{fill:none;stroke:url(#rg);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1);}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-center .big{font-size:2.4em;font-weight:900;color:var(--navy);font-family:'Playfair Display',serif;}
+.score-center .small{font-size:.8em;color:#64748b;}
+.result-msg{font-size:1.05em;color:#475569;margin:10px 0 24px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{border-radius:16px;padding:16px 10px;}
+.stat-card.c{background:#f0fdf4;border:2px solid #10b981;}
+.stat-card.w{background:#fef2f2;border:2px solid #ef4444;}
+.stat-card.p{background:#fffbeb;border:2px solid #f59e0b;}
+.stat-card .num{font-size:2em;font-weight:900;font-family:'Playfair Display',serif;}
+.stat-card.c .num{color:#10b981;}.stat-card.w .num{color:#ef4444;}.stat-card.p .num{color:#f59e0b;}
+.stat-card .lbl{font-size:.8em;color:#64748b;margin-top:4px;}
+.btn-re,.btn-home{width:100%;padding:14px;border:none;border-radius:14px;font-size:1.05em;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:10px;transition:all .2s;}
+.btn-re{background:linear-gradient(135deg,var(--teal),#0891b2);color:#fff;}
+.btn-home{background:#f1f5f9;color:#475569;}
+.btn-re:hover{transform:translateY(-2px);}.btn-home:hover{background:#e2e8f0;}
+.review-section{text-align:left;margin-top:24px;}
+.review-section h3{color:var(--navy);font-size:1.1em;margin-bottom:14px;font-family:'Playfair Display',serif;}
+.rev-item{padding:14px 16px;border-radius:12px;margin-bottom:10px;font-size:.88em;line-height:1.6;}
+.rev-item.wrong{background:#fef2f2;border-left:4px solid var(--red);}
+.rev-item .rt{font-weight:700;margin-bottom:5px;color:#1e293b;}
+@media(max-width:600px){.start-card{padding:28px 20px}.start-card h1{font-size:1.7em}.q-card{padding:18px 14px;margin:12px 10px}#resultsBox{padding:24px 16px}}
+</style>
+</head>
+<body>
+<div class="bg-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+
+<div class="sticky" id="stickyBar" style="display:none">
+  <div class="sticky-inner">
+    <div class="pill pill-q" id="sNum">0/0</div>
+    <div class="pill pill-c" id="sC">✅ 0</div>
+    <div class="pill pill-w" id="sW">❌ 0</div>
+    <div class="pill pill-p" id="sP">📊 0%</div>
+    <div class="prog-wrap"><div class="prog-fill" id="sFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div id="startScreen">
+  <div class="start-card">
+    <span class="cross-icon">⚡</span>
+    <h1>Electrical Engineering Quiz</h1>
+    <p class="subtitle">Electric Power Systems · MCQ · Prof. Dr. Eid Gouda</p>
+    <p class="by-line"><span>𝑩𝒀 𝑴𝑶𝑺𝑻𝑨𝑭𝑨 𝑺𝑨𝑳𝑳𝑨𝑴</span></p>
+    <p class="section-label">اختر الموضوع</p>
+    <div class="filter-group" id="filterGroup"></div>
+    <p class="start-info">عدد الأسئلة: <span id="qCount">157</span></p>
+    <button class="btn-start" onclick="startQuiz()">ابدأ الاختبار ▶</button>
+  </div>
+</div>
+
+<div id="quizWrapper">
+  <div id="cardsContainer"></div>
+  <div class="submit-wrap">
+    <button class="btn-submit" id="submitBtn" onclick="showResults()" disabled>عرض النتيجة 🎯</button>
+  </div>
+  <div id="resultsBox">
+    <h2>🎉 انتهى الاختبار!</h2>
+    <div class="score-ring">
+      <svg width="160" height="160" viewBox="0 0 160 160">
+        <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0e7490"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient></defs>
+        <circle class="ring-bg" cx="80" cy="80" r="64"/>
+        <circle class="ring-fg" id="ringFg" cx="80" cy="80" r="64" stroke-dasharray="402" stroke-dashoffset="402"/>
+      </svg>
+      <div class="score-center"><span class="big" id="rScore">0</span><span class="small">من <span id="rTotal">0</span></span></div>
+    </div>
+    <div class="result-msg" id="rMsg"></div>
+    <div class="stats-grid">
+      <div class="stat-card c"><div class="num" id="rC">0</div><div class="lbl">✅ صح</div></div>
+      <div class="stat-card w"><div class="num" id="rW">0</div><div class="lbl">❌ غلط</div></div>
+      <div class="stat-card p"><div class="num" id="rP">0%</div><div class="lbl">📊 النسبة</div></div>
+    </div>
+    <button class="btn-re" onclick="startQuiz()">🔄 إعادة الاختبار</button>
+    <button class="btn-home" onclick="goHome()">🏠 الرئيسية</button>
+    <div class="review-section" id="reviewDiv"></div>
+  </div>
+</div>
+
+<script>
+const L=['A','B','C','D','E','F'];
+const CATS={
+ c1:'⚡ Ch.1 — Power Systems Overview',
+ c2a:'🔌 Ch.2 — Primary Distribution',
+ c2b:'📉 Ch.2 — Secondary Circuits',
+ c2c:'📊 Ch.2 — Load Characteristics',
+ c3:'🛡️ Ch.3 — Reliability & Power Quality',
+ c4:'🔋 Ch.4 — Standby & Alternative Power'
+};
+const ORDER=['c1','c2a','c2b','c2c','c3','c4'];
+const TFO=["True","False"];
+
+/* ---------- Context blocks (problems / tables / figure from the PDF) ---------- */
+const P58='<b class="ct">Problem for Q58 to Q:</b>A wound coil that has an inductance of 180mH and a resistance of 35Ω is connected to a 100V 50Hz supply. the coil data given: R = 35Ω, L = 180mH, V = 100V and ƒ = 50Hz.';
+const P80='<b class="ct">Problem for Q80 to Q86:</b>Suppose We have four individual feeder-circuits with connected loads of 250 kVA, 200 kVA, 150 kVA and 400 kVA and demand factors of 90%, 80%, 75% and 85% respectively. Use a diversity factor of 1.5 to find the kVA rating of the main distribution feeder and transformer.';
+const P87='<b class="ct">Problem for Q87 to Q88:</b>consider a conveyor belt made up of six sections, each driven by a 2-kW motor. As material is transported along this belt and its equivalent load is 1 kW, it is first carried by section 1, and then each section in succession until the final section is reached. In this simple example only one section of conveyor is carrying material at any point in time. Therefore, five motors are only handling no-load mechanical losses (about 0.1 kW) keeping the belts moving whilst one motor is handling the load. The demand presented by each motor when it is carrying its load is 1 kW, the sum of the demand loads is 6 kW but the maximum load presented by the system at any time is only 1.5 kW. Therefore,';
+const T76='<table><tr><td>Average Load = Area under the load curve (kWh) / no. of hours (h) &nbsp;(kW)</td><td>Eq1</td></tr><tr><td>Load Factor = Average Load / Max. Load</td><td>Eq2</td></tr><tr><td>Utilization Factor = The time that a equipment is in use / The total time that it could be in use</td><td>Eq3</td></tr></table>';
+const FIG1='<b class="ct">Figure 1</b><svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans,sans-serif" font-size="13" fill="#0f172a"><line x1="40" y1="10" x2="40" y2="125" stroke="#0f172a" stroke-width="1.5"/><line x1="40" y1="125" x2="360" y2="125" stroke="#94a3b8" stroke-width="1.5"/><polyline points="40,30 205,30 205,105 225,105 225,30 275,30" fill="none" stroke="#0f172a" stroke-width="2"/><text x="6" y="34" font-weight="700">Up</text><text x="0" y="110" font-weight="700">Down</text><text x="36" y="142">0</text><text x="305" y="142" font-weight="700">Time</text><line x1="42" y1="52" x2="203" y2="52" stroke="#0e7490" stroke-width="1.5"/><text x="105" y="48" font-weight="700">MTTF</text><line x1="42" y1="82" x2="223" y2="82" stroke="#0e7490" stroke-width="1.5"/><text x="105" y="78" font-weight="700">MTBF</text><line x1="205" y1="60" x2="225" y2="60" stroke="#0e7490" stroke-width="1.5"/><text x="235" y="100" font-weight="700">MTTR</text></svg>';
+const T113='<table><tr><td>SAIDI = Σ Customer Interruption Durations / Total Number of Customers Served &nbsp;(hours per year)</td><td>Eq4</td></tr><tr><td><b>SAIDI = Σ(r<sub>i</sub> * N<sub>i</sub> ) / N<sub>T</sub></b></td><td>Eq5</td></tr><tr><td style="text-align:left">Where,<br>SAIDI = System Average Interruption Duration Index, minutes.<br>Σ = Summation function.<br>r<sub>i</sub> = Restoration time, minutes.<br>N<sub>i</sub> = Total number of customers interrupted.<br>N<sub>T</sub> = Total number of customers served.</td><td>Eq6</td></tr></table>';
+const T114='<b class="ct">Table 1</b><table><tr><th>S.N</th><th>Time</th><th>Customers (number)</th><th>Duration (min)</th></tr><tr><td>1</td><td>9:53</td><td>10</td><td>90</td></tr><tr><td>2</td><td>11:02</td><td>1,000</td><td>20</td></tr><tr><td>3</td><td>13:15</td><td>2</td><td>175</td></tr><tr><td>4</td><td>20:48</td><td>1</td><td>120</td></tr><tr><td>5</td><td>22:35</td><td>1</td><td>38</td></tr></table>';
+const T115='<table><tr><td>SAIFI = Total Number of Customer Interruptions / Total Number of Customers Served &nbsp;(per year)</td><td>Eq7</td></tr><tr><td><b>SAIFI = Σ(N<sub>i</sub>) / N<sub>T</sub></b></td><td>Eq8</td></tr></table>';
+const T116='<table><tr><td>CAIDI = Σ Customer Interruption Durations / Total Number of Customer Interruptions = SAIDI / SAIFI &nbsp;(hours per interruption)</td><td>Eq9</td></tr><tr><td><b>CAIDI = Σ(r<sub>i</sub> * N<sub>i</sub> ) / Σ( N<sub>i</sub> )</b></td><td>Eq10</td></tr></table>';
+
+const Q=(n,cat,q,o,a,ctx)=>({n,cat,q,opts:o,c:'ABCDEF'.indexOf(a),ctx:ctx||''});
+
+const ALL=[
+Q(1,'c1',"Typical subsystems of an electric Power System consist of…..",["Generation,","Transmission,","Distribution,","Utilization (i.e. loads, or users) Subsystems.","all of these"],'E'),
+Q(2,'c1',"The electricity is most often generated at a power station by electromechanical -----",["Generators","Transformers,","Motors,","all of these"],'A'),
+Q(3,'c1',"hydropower, wind, solar photovoltaic, and geothermal power are used in the electric energy production. This sentence is---",TFO,'A'),
+Q(4,'c1',"Voltage levels of various portions of a typical utility grid….",["15kv,","220kv,","66kv","11kv","380v","all of these"],'F'),
+Q(5,'c1',"Generation Voltage level of a typical utility grid….",["15kv,","220kv,","66kv","11kv","380v","all of these"],'A'),
+Q(6,'c1',"Transmission Voltage level of a typical utility grid….",["15kv,","220kv,","66kv","11kv","380v","all of these"],'B'),
+Q(7,'c1',"Distribution Voltage level of a typical utility grid….",["15kv,","220kv,","66kv","11kv","380v","C , D and E"],'F'),
+Q(8,'c1',"End user load Voltage level of a typical utility grid….",["15kv,","220kv,","66kv","11kv","380v","all of these"],'E'),
+Q(9,'c1',"…… are responsible for transporting electrical energy between two distant points",["Lines,","Transformer,","Circuit Breaker","Potential Transformer","none of these"],'A'),
+Q(10,'c1',"…… used for distribution lines are characterized by their current capacity and rated voltage.",["Cables,","conductors,","Circuit Breaker","Potential Transformer","A and B"],'E'),
+Q(11,'c1',"……..is an electric device that consists of two or more windings coupled by their electromagnetic fields",["Lines,","Transformer","Circuit Breaker","none of these"],'B'),
+Q(12,'c1',"…… is a switching device designed to open and close a circuit by nonautomatic means and to open the circuit automatically on a predetermined overcurrent in order to avoid damage to itself and other equipment.",["Lines,","Transformer,","Circuit Breaker","Potential Transformer","none of these"],'C'),
+Q(13,'c1',"…….are used to reduce the primary circuit voltage to a safe value (like 120 V), so it can be used as an input signal for monitoring and protection devices.",["Lines,","Circuit Breakers","Potential Transformers","none of these"],'C'),
+Q(14,'c1',"…….. transforms line current into values suitable for standard protective and monitoring devices, and isolates the relays from line voltages",["Lines,","Circuit Breaker","Potential Transformer","none of these"],'D'),
+Q(15,'c1',"…… is an electronic, low-powered device used to activate a high-powered device.",["Relay,","Recloser","Fuse","none of these"],'A'),
+Q(16,'c1',"In case of a permanent fault, ……. locks open after a preset number of operations (usually three or four), isolating the faulted section from the main part of the system.",["Relay,","Recloser","Fuse","none of these"],'B'),
+Q(17,'c1',"……. consists of a strip of wire that melts and clears an electric circuit when an overcurrent or short-circuit current passes through it.",["Relay,","Recloser","Fuse","none of these"],'C'),
+Q(18,'c1',"…… senses current flow above a preset level, and when the source-side protective device opens to de-energize the circuit, the sectionalizer counts the overcurrent interruption.",["Sectionalizer,","Switch","Voltage regulator","none of these"],'A'),
+Q(19,'c1',"….. is a switching device used to isolate a system element for repair or maintenance.",["Sectionalizer,","Switch","Voltage regulator","none of these"],'B'),
+Q(20,'c1',"….. is transformer with a 1:1 nominal transformation ratio equipped with an on-load tap changer",["Sectionalizer,","Switch","Voltage regulator","none of these"],'C'),
+Q(21,'c1',"…… is a local source of reactive power",["Capacitor Bank","SCADA","Voltage regulator","none of these"],'A'),
+Q(22,'c1',"……. (System Control and Data Acquisition) is a communication system that allows real-time monitoring of the distribution system",["Capacitor Bank","SCADA","Voltage regulator","none of these"],'B'),
+Q(23,'c1',"a power transformer may be have …..",["primary windings","secondary windings","tertiary windings","all of these"],'D'),
+Q(24,'c1',"the function of the distribution substation",["Voltage transformation:","Switching and protection:","Voltage regulation","Metering:","all of these"],'E'),
+
+Q(25,'c2a',"The most frequently used voltages and wiring in the primary distribution are ------ in Egypt",["11kV","22kV","all of them"],'C'),
+Q(26,'c2a',"Primary distribution, in low load density areas, is a -----system. This is economical but yields low reliability",["radial","loop","all of them"],'A'),
+Q(27,'c2a',"A more economical and fairly reliable arrangement is the ---- connection, when the main feeder is supplied from two independent distribution substations",["radial","loop","all of them"],'B'),
+Q(28,'c2a',"The ------improves the power factor and reduces voltage drop at heavy loads.",["dc motor","dc generator","capacitor bank","all of them"],'C'),
+Q(29,'c2a',"the advantage of using radial designs for power distribution:",["Protection is basically overcurrent,","Lower fault currents,","Voltage regulation and power flow control are easier to implement","System design is less expensive.","all of them"],'E'),
+Q(30,'c2a',"-----reduce the installation costs but reduce aesthetics",["cables","Overhead lines","all of them"],'B'),
+Q(31,'c2a',"-------distribution system provides electric energy to the customers through the distribution transformers and secondary cables.",["Primary","Secondary","all of them"],'B'),
+Q(32,'c2a',"The modern, mostly electronic meters can measure 15-min kW demand and the kWh energy consumption",TFO,'A'),
+Q(33,'c2a',"The ground wire connects the metal parts of the appliances and service panel box together to protect against ground-fault-produced electric shocks.",TFO,'A'),
+Q(34,'c2a',"The voltage supplied to each customer on a distribution feeder should be within the ----- limit.",["±1%","± 5%","± 10%"],'B'),
+Q(35,'c2a',"The capacitor is switched off during the night when the load is light and switched on when the load is heavy",TFO,'A'),
+Q(36,'c2a',"In residential areas, the load is uniformly distributed. In this case the optimum location of the capacitor bank is around -----of the length of the feeder.",["half","one-third","two-thirds"],'C'),
+Q(37,'c2a',"The voltage regulator is a tap-changing transformer which is located, in most cases, at the supply ----of the feeder.",["half","start","end"],'C'),
+Q(38,'c2a',"The tap changer ----the supply voltage, which in turn increases the voltage above the allowable minimum at the last load.",["increases","decreases","fixes"],'A'),
+Q(39,'c2a',"The tap changer transformer has two windings. ------winding is connected in parallel. -----winding is connected in series with the feeder.",["The regulating- The excitation","The excitation- The regulating"],'B'),
+
+Q(40,'c2b',"Keeping in mind that the maximum voltage drop to supply the sensitive load is 1.5% of the 220V. Therefore, the maximum voltage drop equals to ---- i.e. the minimum voltage to supply the sensitive load equals to ----.",["3.3V , 216.7 V","216.7 V, 3.3V","6.6 V, 213.4 V","213.4 V, 6.6 V"],'A'),
+Q(41,'c2b',"For the regular load the allowable voltage drop equals to 3% of the 220V i.e.-----, and the load should not be supplied with less than-----.",["3.3V , 216.7 V","216.7 V, 3.3V","6.6 V, 213.4 V","213.4 V, 6.6 V"],'C'),
+Q(42,'c2b',"-------losses which result from the heating of the conductor and the cable (or wire) insulation",["the active power","the reactive power"],'A'),
+Q(43,'c2b',"--- losses, which is the energy needed for creation and storage of the magnetic fields associated with the flow of current, and the electric fields associated with the voltage separation.",["the active power","the reactive power"],'B'),
+Q(44,'c2b',"Mathematically, ----- losses can be simplified to Ploss = I2R, where R is the conductor resistance",["the active power","the reactive power"],'A'),
+Q(45,'c2b',"----- loss can be simplified as Qloss = I2X, where X is the reactance of the line. It is well known that X = 2πfL, where L is the inductance of the conductors.",["the active power","the reactive power"],'B'),
+Q(46,'c2b',"The power lost in a cable depends on",["the cable length","cable size","the current through the cable","all of these"],'D'),
+Q(47,'c2b',"In electrical engineering, the power factor of an AC electrical power system is defined as the ratio of",["the real power (P) flowing to the load to the apparent power (s)","the real power (P) flowing to the load to the reactive power (Q)","the reactive power (Q)flowing to the load to the apparent power (s)"],'A'),
+Q(48,'c2b',"A power factor of less than one means that the voltage and current waveforms are not in phase",TFO,'A'),
+Q(49,'c2b',"power factor can be equal------",["unity power factor","lagging power factor","leading power factor","all of these"],'D'),
+Q(50,'c2b',"------- signifies that the load is inductive, as the load will consume reactive power, and therefore the reactive component Q is positive as reactive power travels through the circuit and is consumed by the inductive load.",["unity power factor","lagging power factor","leading power factor","all of these"],'B'),
+Q(51,'c2b',"------ signifies that the load is capacitive, as the load supplies reactive power, and therefore the reactive component Q is negative as reactive power is being supplied to the circuit.",["unity power factor","lagging power factor","leading power factor","all of these"],'C'),
+Q(52,'c2b',"In an electric power system, a load with a low power factor draws more current than a load with a high-power factor for the same amount of useful power transferred.",TFO,'A'),
+Q(53,'c2b',"The ------currents increase the energy lost in the distribution system, and require larger wires and other equipment.",["higher","lower"],'A'),
+Q(54,'c2b',"Because of the costs of larger equipment and wasted energy, electrical utilities will usually charge a higher cost to industrial or commercial customers where there is a ---power factor.",["high","low"],'B'),
+Q(55,'c2b',"In industrial and commercial facilities, the majority of electrical equipment acts ----",["resistors","inductors","all of them"],'C'),
+Q(56,'c2b',"Resistive loads include ------",["incandescent lights, baseboard heaters, and cooking ovens.","fluorescent lights, AC induction motors, arc welders, and transformers.","all of them"],'A'),
+Q(57,'c2b',"Inductive loads include------",["incandescent lights, baseboard heaters, and cooking ovens.","fluorescent lights, AC induction motors, arc welders, and transformers.","all of them"],'B'),
+Q(58,'c2b',"Calculate the impedance of the coil",["66.5 ohm","6.65 ohm","665 ohm"],'A',P58),
+Q(59,'c2b',"Calculate the current of the coil",["15 A","1.5 A","0.15 A"],'B',P58),
+Q(60,'c2b',"Calculate the power factor of the coil",["526","5.26","0.526"],'C',P58),
+Q(61,'c2b',"Calculate the type of power factor of the coil",["lagging","leading","unity"],'A',P58),
+Q(62,'c2b',"Calculate the apparent power consumed of the coil",["150 VA","15 VA","1.5 VA"],'A',P58),
+Q(63,'c2b',"Advantages of improving the power factor:",["Reduction in circuits current.","Increase in voltage level at load buses.","Reduction in system energy losses.","Reduction in investments in the system facilities per kW of the load supplied.","all of them"],'E'),
+Q(64,'c2b',"Advantages of improving the power factor:",["Lower utility operating costs and hence, lower customer costs.","Reduction in the kVA loading of the system equipment. This is may relieve an overloading condition or release capacity for additional growth of load.","Reduction in kVA demand charges for large consumers.","Improved equipment operation by reducing the voltage drop.","all of them"],'E'),
+
+Q(65,'c2c',"The demand of an installation or system is the load that is drawn from the supply at a specified interval of time; it is expressed in KWs, KVA or Amperes.",TFO,'A'),
+Q(66,'c2c',"The connected load is the sum of continuous ratings of all the equipment’s connected in supply system.",TFO,'A'),
+Q(67,'c2c',"load curve which is a graphic record showing the demand of the power for every instant during the hour, the day, the month or the year",TFO,'A'),
+Q(68,'c2c',"The maximum load (or the peak load) represents the maximum power that consumed by the load during a specific given time.",TFO,'A'),
+Q(69,'c2c',"The average load is the average power that consumed by the load during a certain period of time and it is equal to the average power that generated by the plant during the same period of time when neglecting transmission line losses",TFO,'A'),
+Q(70,'c2c',"The load factor is the ratio of the average load to the maximum load for a certain period of time.",TFO,'A'),
+Q(71,'c2c',"The demand factor is the ratio of the maximum load to the connected load.",TFO,'A'),
+Q(72,'c2c',"if a residence having 6000W equipment connected has a maximum demand of 3300W, then the demand factor",["0.55","5.5","0.055"],'A'),
+Q(73,'c2c',"The diversity factor is the ratio of the sum of individual maximum demand of a group of loads to their overall maximum demand as seen by the power source",TFO,'A'),
+Q(74,'c2c',"A distribution feeder serves 5 houses, each of which has a peak demand of 5 KW. The feeder peak turns out to be 20 kW. The diversity is",["0.125","1.25","12.5"],'B'),
+Q(75,'c2c',"A substation has three outgoing feeders: Feeder 1 has maximum demand 10 MW at 10:00 am, Feeder 2 has maximum demand 12 MW at 7:00 pm and Feeder 3 has maximum demand 15 MW at 9:00 pm, While the maximum demand of all three feeders is 33 MW at 8:00 pm. Here, the sum of the maximum demand of the individual sub-systems (feeders) is 10 + 12 + 15 = 37 MW, while the system maximum demand is 33 MW. The diversity factor is",["11.2","0.112","1.12"],'C'),
+Q(76,'c2c',"the utilization factor is calculated by equation",["eq1","eq2","eq3"],'C',T76),
+Q(77,'c2c',"A motor may only be used for eight hours a day, 50 weeks a year. The hours of operation would then be 2000 hours, and the motor Utilization factor for a base of 8760 hours per year would be",["0.2283","2.283","0.02283"],'A'),
+Q(78,'c2c',"The base load on a distribution substation is unvarying load which occurs almost the whole day on the substation.",TFO,'A'),
+Q(79,'c2c',"The peak load on distribution substation is the various peak demand of the load over and above base load of the station",TFO,'A'),
+Q(80,'c2c',"demand for feeder 250 kVA",["250 kVA x 90% = 225 kVA","200 kVA x 80% = 160 kVA","150 kVA x 75% = 112.5 kVA","400 kVA x 85% = 340 kVA"],'A',P80),
+Q(81,'c2c',"demand for feeder 200 kVA",["250 kVA x 90% = 225 kVA","200 kVA x 80% = 160 kVA","150 kVA x 75% = 112.5 kVA","400 kVA x 85% = 340 kVA"],'B',P80),
+Q(82,'c2c',"demand for feeder 150 kVA",["250 kVA x 90% = 225 kVA","200 kVA x 80% = 160 kVA","150 kVA x 75% = 112.5 kVA","400 kVA x 85% = 340 kVA"],'C',P80),
+Q(83,'c2c',"demand for feeder 400 kVA",["250 kVA x 90% = 225 kVA","200 kVA x 80% = 160 kVA","150 kVA x 75% = 112.5 kVA","400 kVA x 85% = 340 kVA"],'D',P80),
+Q(84,'c2c',"Hence, the sum of the individual demands =",["837.5 kVA.","83.75 kVA.","8.375 kVA."],'A',P80),
+Q(85,'c2c',"If the main feeder-circuit were sized at unity diversity: kVA = 837.5 kVA / 1.00 = 837.5 kVA. The main feeder-circuit would have to be supplied by an ---- transformer.",["85.0 kVA","850 kVA","8.50 kVA"],'B',P80),
+Q(86,'c2c',"However, using the diversity factor of 1.5, the main feeder kVA = 837.5 kVA / 1.5 = 558 kVA for the main feeder. For diversity factor of 1.5, a ---- transformer could be used.",["6 kVA","60 kVA","600 kVA"],'C',P80),
+Q(87,'c2c',"Diversity factor = Sum of Individual Max. Demand / Max. Demand =",["0.4","4","400"],'B',P87),
+Q(88,'c2c',"Demand Factor = Maximum demand / Total connected load =",["0.125","1.25","0.0125"],'A',P87),
+
+Q(89,'c3',"Generally, the reliability is the probability of a device or a system performing its function adequately",TFO,'A'),
+Q(90,'c3',"The reliability of power systems is defined as a measure of the ability of a system,",TFO,'A'),
+Q(91,'c3',"Power system reliability (comprising generation and transmission & distribution facilities) can be described by basic functional attributes:",["adequacy","security","all of them"],'C'),
+Q(92,'c3',"The system adequacy is a measure of the ability of the power system to supply the aggregate electric power and energy requirements of the customers",TFO,'A'),
+Q(93,'c3',"If a system is to have high availability, it should very rarely fail but it should also be possible to quickly repair it",TFO,'A'),
+Q(94,'c3',"Mean Time Between Failure (MTBF) is a reliability term used to provide the number of failures per year for a product.",TFO,'A'),
+Q(95,'c3',"Mean Time To Repair (MTTR) is the time needed to repair a failed hardware",TFO,'A'),
+Q(96,'c3',"Mean Time Between Failure is a reliability term used to provide the number of failures per year for a product. Its symbol",["MTBF","MTTR","none of them"],'A'),
+Q(97,'c3',"Mean Time To Repair is the time needed to repair a failed hardware. Its symbol",["MTBF","MTTR","none of them"],'B'),
+Q(98,'c3',"To avoid MTTR, many companies purchase spare products so that a replacement can be installed quickly",TFO,'A'),
+Q(99,'c3',"Mean Time To Failure (MTTF) is a basic measure of reliability for nonrepairable systems. It is the mean time expected until the failure of a piece of equipment",TFO,'A'),
+Q(100,'c3',"in Figure 1, We try to make MTTR time as minimum as we can",TFO,'A',FIG1),
+Q(101,'c3',"Outage, when a piece of equipment is deenergized.",TFO,'A'),
+Q(102,'c3',"Momentary interruption, when a customer is deenergized for less than a few minutes.",TFO,'A'),
+Q(103,'c3',"Sustained interruption, when a customer is deenergized for more than a few minutes.",TFO,'A'),
+Q(104,'c3',"when a piece of equipment is deenergized. called",["Outage","Momentary interruption","Sustained interruption"],'A'),
+Q(105,'c3',"when a customer is deenergized for less than a few minutes. called",["Outage","Momentary interruption","Sustained interruption"],'B'),
+Q(106,'c3',"Sustained interruption, when a customer is deenergized for more than a few minutes. called",["Outage","Momentary interruption","Sustained interruption"],'C'),
+Q(107,'c3',"Sequence of Events after an Overhead Distribution Fault",["The fault causes high currents to flow from the source to the fault location","An instantaneous relay trips open the feeder circuit breaker at the substation","If the fault persists, time overcurrent protection devices are allowed to clear the fault","All of them"],'D'),
+Q(108,'c3',"Sequence of Events after an Overhead Distribution Fault",["The electric utility will receive trouble calls from customers with interrupted power","The crew repairs the faulted equipment and returns the distribution system to its normal operating state","All of them"],'C'),
+Q(109,'c3',"the same fault will result in",["voltage sags for some customers.","momentary interruptions for other customers.","varying lengths of sustained interruptions for other customers.","All of them"],'D'),
+Q(110,'c3',"The most common customer reliability indices are:",["System Average Interruption Frequency Index (SAIFI),","System Average Interruption Duration Index (SAIDI),","Customer Average Interruption Duration Index (CAIDI),","Average System Availability Index (ASAI)","All of them"],'E'),
+Q(111,'c3',"If SAIFI and SAIDI are known,",["CAIDI can be calculated.","ASAI can be calculated.","All of them"],'C'),
+Q(112,'c3',"The System Average Interruption Duration Index (SAIDI) measures the average of the total long duration of interruptions affecting the average delivery point for a given year.",TFO,'A'),
+Q(113,'c3',"This indicator is defined as the total time that customers were interrupted divided by the total number of customers.",["System Average Interruption Frequency Index (SAIFI),","System Average Interruption Duration Index (SAIDI),","Customer Average Interruption Duration Index (CAIDI),","Average System Availability Index (ASAI)"],'B'),
+Q(114,'c3',"Consider a utility system supplying a total of 50,000 customers. The outage records over a whole year are shown in Table 1. The SAIDI is then equals to",["4.2816 min/year.","0.42816 min/year.","0.042816 min/year."],'B',T113+T114),
+Q(115,'c3',"In the previous example, SAIFI = -----sustained interruptions/customer.",["2.028","0.2028","0.02028."],'C',T115),
+Q(116,'c3',"In the previous example, CAIDI = -----min/sustained interruption",["21.1124","211.124","2.11124."],'A',T116),
+Q(117,'c3',"CAIDI equals---",["SAIDI/SAIFI","SAIFI/ SAIDI","SAIDI* SAIFI"],'A'),
+Q(118,'c3',"Depending on duration of voltage variations, short-duration voltage disturbances can be classified into",["Voltage sag","Voltage Swells","Interruptions","All of them"],'D'),
+Q(119,'c3',"which is a drop in voltage (between 10% and 90%) for few cycles (1 to 30).",["Voltage sag","Voltage Swells","Interruptions","All of them"],'A'),
+Q(120,'c3',"which is an increase in the voltage between 1.1 and 1.8 p.u at the power frequency for a short period of time (1 to 30 cycles).",["Voltage sag","Voltage Swells","Interruptions","All of them"],'B'),
+Q(121,'c3',"which are temporary and momentary interruptions that occur when the supply voltage decreases less than 10% of its nominal value up to a period of time not larger than 1 minute.",["Voltage sag","Voltage Swells","Interruptions","All of them"],'C'),
+Q(122,'c3',"Duration of long-duration voltage disturbances are generally larger than one minute. These PQ disturbances can be classified to",["Undervoltage","Overvoltage","Sustained interruptions","All of them"],'D'),
+Q(123,'c3',"--- is a drop in voltage below the standard voltage tolerance (-5%).",["Undervoltage","Overvoltage","Sustained interruptions"],'A'),
+Q(124,'c3',"------ is an increase in voltage above the standard voltage tolerance(+5%).",["Undervoltage","Overvoltage","Sustained interruptions"],'B'),
+Q(125,'c3',"------ which are interruptions that occur when the supply voltage decrease less than 10% of its nominal value for a period of time larger than 1 minute",["Undervoltage","Overvoltage","Sustained interruptions"],'C'),
+
+Q(126,'c4',"------ is the general- purpose alternating-current (AC) electric power supply",["Mains electricity","normal power supply","default power supply","all of them"],'D'),
+Q(127,'c4',"------ is an independent source of electrical power that supports important electrical systems on loss of normal power supply",["Emergency generator","standby generator","all of them"],'C'),
+Q(128,'c4',"The emergency generators operate either manually or automatically, while standby generators usually operate automatically.",TFO,'A'),
+Q(129,'c4',"Standby generator is a back-up electrical system that operates automatically within seconds of a utility outage.",TFO,'A'),
+Q(130,'c4',"----- may include a standby generator or emergency generator, batteries and other apparatus.",["Standby power system","or emergency power system","all of them"],'C'),
+Q(131,'c4',"Transfer switch is an electrical switch that switches a load between two sources",TFO,'A'),
+Q(132,'c4',"-----is a static transfer switch uses power semiconductors such as Siliconcontrolled rectifiers (SCRs) or thyristors to transfer a load between two sources.",["Automatic Static transfer switch (ASTS)","Transfer switch","Automatic Transfer Switch (ATS)","all of them"],'A'),
+Q(133,'c4',"----is an electrical apparatus that provides emergency power to a load when the input power source or mains power fails.",["Uninterruptible Power Supply","Uninterruptible Power Source (UPS)","Automatic Transfer Switch (ATS)","A and B"],'D'),
+Q(134,'c4',"------is a type of UPS that relies on static components without the need of moving mechanical parts except the mechanical transfer switch",["Static UPS","Rotary UPS","Automatic Transfer Switch (ATS)","A and B"],'A'),
+Q(135,'c4',"-----is a type of UPSs that provide zero power transfer using static UPS, and can also provide power for extended durations using rotary generators.",["Static UPS","Hybrid static/rotary UPS","Automatic Transfer Switch (ATS)","all of them"],'B'),
+Q(136,'c4',"-----offers only the most basic features, providing surge protection and battery backup.",["Off-line or standby UPS (SPS)","Hybrid static/rotary UPS","Automatic Transfer Switch (ATS)","all of them"],'A'),
+Q(137,'c4',"Brownout is an intentional or unintentional drop in voltage in an electrical power supply system.",TFO,'A'),
+Q(138,'c4',"The important characteristics of a reserve power supply are:",["Power capacity and stored energy and Transfer time","Maximum duration of generation and Efficiency","Cost of installation and maintenance.","all of them"],'D'),
+Q(139,'c4',"duplicated feeder from grid power capacity---Transfer time----cost---",["infinite/very short/very high","effectively infinite/ from long up to very short/ medium to high","medium/very short/ low","medium/very short/ medium to high"],'A'),
+Q(140,'c4',"Engine generating sets power capacity---Transfer time----cost---",["infinite/very short/very high","effectively infinite/ from long up to very short/ medium to high","medium/very short/ low","medium/very short/ medium to high"],'B'),
+Q(141,'c4',"Battery storage power capacity---Transfer time----cost---",["infinite/very short/very high","effectively infinite/ from long up to very short/ medium to high","medium/very short/ low","medium/very short/ medium to high"],'C'),
+Q(142,'c4',"Un-interruptible power supply (UPS) systems power capacity---Transfer time----cost---",["infinite/very short/very high","effectively infinite/ from long up to very short/ medium to high","medium/very short/ low","medium/very short/ medium to high"],'D'),
+Q(143,'c4',"Compressed air energy storage (CAES) power capacity---Transfer time----cost---",["low to medium/very short/medium to high","effectively infinite/ from long up to very short/ medium to high","medium/very short/ low","medium/very short/ medium to high"],'A'),
+Q(144,'c4',"cost of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["low/medium/high/very high","very high/ high/ medium/ low","None of them"],'A'),
+Q(145,'c4',"Energy density (Wh/kg) of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["30/50/75/100","100/75/50/30","None of them"],'A'),
+Q(146,'c4',"Voltage per cell(V) of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["2.27/1.25/1.25/3.6","3.6/1.25/1.25/2.27","None of them"],'A'),
+Q(147,'c4',"load current of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["low/very high/moderate/high","high/moderate/very high/low","None of them"],'A'),
+Q(148,'c4',"No of charge/discharge cycles of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["200-2000/1500/500/300-500","300-500/500/1500/200-2000","None of them"],'A'),
+Q(149,'c4',"self discharge of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["low/moderate/high/low","low/high/moderate/low","None of them"],'A'),
+Q(150,'c4',"Min recharge time (hours) of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["8-16/1.5/2-3/3-6","3-6/2-3/1.5/8-16","None of them"],'A'),
+Q(151,'c4',"environmental hazard of sealed lead-acid, Nicd, NiMH and Li ion batteries are ---",["high/high/low/high","low/low/high/low","None of them"],'A'),
+Q(152,'c4',"which one is not energy storage system",["Flywheels","Super-capacitors","Superconducting magnetic energy storage (SMES)","resistive load"],'D'),
+Q(153,'c4',"for superconducting magnetic energy storage (SMES), the specific losses Wh -----and self discharge time----",["35W/1.7min","1.7W/35min","none of them"],'A'),
+Q(154,'c4',"for low speed flywheels (LSFW), the specific losses Wh -----and self discharge time----",["2.2W/30min","30W/2.2min","none of them"],'A'),
+Q(155,'c4',"for High speed flywheels (LSFW), the specific losses Wh -----and self discharge time----",["1.2W/50min","50W/1.2min","none of them"],'A'),
+Q(156,'c4',"for Super-capacitor(SC), the specific losses Wh -----and self discharge time----",["0.026W/1.6days","1.6W/0.026days","none of them"],'A'),
+Q(157,'c4',"for secondary batteries (SB), the specific losses Wh -----and self discharge time----",["0.023W/very long, over a few months","very high/0.023days","none of them"],'A'),
+];
+
+let curCat='all', questions=[], answered=0, score=0, wrong=0, totalQ=0;
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* build filter buttons */
+(function(){
+  const g=document.getElementById('filterGroup');
+  let h='<button class="filter-btn active" onclick="selCat(\'all\',this)">📚 الكل</button>';
+  ORDER.forEach(k=>{h+='<button class="filter-btn" onclick="selCat(\''+k+'\',this)">'+CATS[k]+'</button>';});
+  g.innerHTML=h;
+})();
+
+function selCat(cat,btn){
+  curCat=cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const n=cat==='all'?ALL.length:ALL.filter(q=>q.cat===cat).length;
+  document.getElementById('qCount').textContent=n;
+}
+function startQuiz(){
+  questions=curCat==='all'?[...ALL]:ALL.filter(q=>q.cat===curCat);
+  totalQ=questions.length;
+  answered=0;score=0;wrong=0;
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('resultsBox').style.display='none';
+  document.getElementById('quizWrapper').style.display='block';
+  document.getElementById('stickyBar').style.display='block';
+  renderCards();
+  window.scrollTo({top:0});
+}
+function mkHdr(txt){
+  const d=document.createElement('div');d.className='sec-hdr';
+  d.innerHTML='<div class="line"></div><div class="lbl">'+txt+'</div><div class="line r"></div>';
+  return d;
+}
+function renderCards(){
+  const c=document.getElementById('cardsContainer');c.innerHTML='';
+  let lastCat=null;
+  questions.forEach((q,i)=>{
+    if(q.cat!==lastCat){c.appendChild(mkHdr(CATS[q.cat]));lastCat=q.cat;}
+    const card=document.createElement('div');
+    card.className='q-card';card.id='card-mcq-'+i;
+    card.style.animationDelay=Math.min(i*.018,.5)+'s';
+    const oh=q.opts.map((o,li)=>'<button class="opt" data-orig="'+li+'" data-letter="'+L[li]+'" onclick="checkMCQ('+i+','+li+','+q.c+')">'+esc(o)+'</button>').join('');
+    card.innerHTML='<div class="q-header"><div class="q-num">Q'+q.n+'</div><div class="cat-tag">'+CATS[q.cat]+'</div></div>'
+      +'<div class="q-text">'+esc(q.q)+'</div>'
+      +(q.ctx?'<div class="ctx">'+q.ctx+'</div>':'')
+      +'<div class="opts" id="opts-mcq-'+i+'">'+oh+'</div><div class="q-feedback" id="fb-mcq-'+i+'"></div>';
+    c.appendChild(card);
+  });
+  updateSticky();
+  document.getElementById('submitBtn').disabled=true;
+}
+
+function checkMCQ(qi,chosen,correct){
+  const od=document.getElementById('opts-mcq-'+qi);
+  if(od.querySelector('.correct,.wrong'))return;
+  const ok=chosen===correct;
+  Array.from(od.querySelectorAll('.opt')).forEach(b=>{
+    b.disabled=true;
+    if(+b.dataset.orig===correct)b.classList.add('correct');
+    else if(+b.dataset.orig===chosen&&!ok)b.classList.add('wrong');
+  });
+  const q=questions[qi];
+  const fb=document.getElementById('fb-mcq-'+qi);
+  fb.style.display='block';fb.className='q-feedback '+(ok?'correct':'wrong');
+  fb.textContent=ok?'✅ Correct!':'❌ Wrong. الإجابة الصحيحة: '+L[correct]+') '+q.opts[correct];
+  document.getElementById('card-mcq-'+qi).classList.add(ok?'answered-correct':'answered-wrong');
+  if(ok)score++;else wrong++;
+  answered++;updateSticky();
+  checkDone();
+}
+
+function checkDone(){
+  if(answered===totalQ){
+    document.getElementById('submitBtn').disabled=false;
+    setTimeout(()=>document.getElementById('submitBtn').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function updateSticky(){
+  const t=totalQ||questions.length,pct=answered>0?Math.round(score/answered*100):0;
+  document.getElementById('sNum').textContent=answered+'/'+t+' أجبت';
+  document.getElementById('sC').textContent='✅ '+score;
+  document.getElementById('sW').textContent='❌ '+wrong;
+  document.getElementById('sP').textContent='📊 '+pct+'%';
+  document.getElementById('sFill').style.width=(t>0?Math.round(answered/t*100):0)+'%';
+}
+
+function showResults(){
+  const t=totalQ,pct=Math.round(score/t*100);
+  document.getElementById('rScore').textContent=score;
+  document.getElementById('rTotal').textContent=t;
+  document.getElementById('rC').textContent=score;
+  document.getElementById('rW').textContent=wrong;
+  document.getElementById('rP').textContent=pct+'%';
+  setTimeout(()=>{document.getElementById('ringFg').style.strokeDashoffset=402-(402*pct/100);},100);
+  document.getElementById('rMsg').textContent=pct>=90?'🌟 Excellent! أنت متقن!':pct>=75?'👏 Very Good! مجهود رائع!':pct>=60?'👍 Good! راجع الغلط!':'📚 تحتاج مراجعة — إنت قادر!';
+  const rev=document.getElementById('reviewDiv');rev.innerHTML='<h3>📋 مراجعة الإجابات الغلط</h3>';
+  let hw=false;
+  questions.forEach((q,i)=>{
+    const card=document.getElementById('card-mcq-'+i);
+    if(card&&card.classList.contains('answered-wrong')){
+      hw=true;
+      rev.innerHTML+='<div class="rev-item wrong"><div class="rt">❌ Q'+q.n+': '+esc(q.q)+'</div><div>✅ الإجابة الصحيحة: <strong>'+L[q.c]+') '+esc(q.opts[q.c])+'</strong></div></div>';
+    }
+  });
+  if(!hw)rev.innerHTML='<p style="color:#10b981;text-align:center;padding:24px;font-size:1.1em;">🎉 كل إجاباتك صح! ممتاز!</p>';
+  document.getElementById('resultsBox').style.display='block';
+  document.getElementById('resultsBox').scrollIntoView({behavior:'smooth'});
+}
+function goHome(){
+  document.getElementById('quizWrapper').style.display='none';
+  document.getElementById('stickyBar').style.display='none';
+  document.getElementById('startScreen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.onload=()=>{document.getElementById('qCount').textContent=ALL.length;};
+</script>
+</body>
+</html>
